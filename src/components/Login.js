@@ -2,8 +2,10 @@ import cayde from "../images/cayde.png";
 
 const AUTH_URL = `https://www.bungie.net/en/OAuth/Authorize?client_id=${process.env.REACT_APP_CLIENT_ID}&response_type=code`;
 
-const Login = () => {
-    const handleLogin = () => window.location.href = AUTH_URL;
+export function Login() {
+    const handleLogin = () => {
+        window.location.href = AUTH_URL;
+    }
 
     return (
         <div className="login-container tile">
@@ -13,5 +15,3 @@ const Login = () => {
         </div>
     );
 }
-
-export default Login;

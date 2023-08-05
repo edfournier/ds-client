@@ -4,15 +4,17 @@ body {
     color: white;
 }
 
+
 h1 {
     margin-bottom: 10px;
 }
 
-.cayde {
-    height: 1000px;
-    width: auto;
-    padding: 20px;
-    padding-top: 0;
+input {
+    font: inherit;
+}
+
+button {
+    font: inherit;
 }
 
 .tile {
@@ -20,6 +22,12 @@ h1 {
     background-color: #212121;
 }
 
+.home-view {
+    display: flex;
+    gap: 10px;
+}
+
+/* Login page styles. */
 .login-container {
     display: flex;
     flex-direction: column;
@@ -43,10 +51,64 @@ h1 {
     cursor: pointer;
 }
 
+.cayde {
+    height: 1000px;
+    width: auto;
+    padding: 20px;
+    padding-top: 0;
+}
+
+/* Search form styles. */
+.search-form {
+    margin-top: 8px;
+}
+
+.search-box {
+    width: 296px;
+}
+
+.search-container {
+    position: absolute;     /* To overlay results. */
+    padding: 2px;
+    margin-top: 4px;
+    width: 300px;
+}
+
+.search-container:empty {
+    display: none;
+}
+
+.search-result {
+    position: relative;     /* To overlay results. */
+    padding: 2px;
+    border-bottom: 1px solid #121212;
+} 
+
+.search-result:hover {
+    cursor: pointer;
+}
+
+/* Inventory styles. */
+.inventories {
+    width: fit-content;
+}
+
 .inventory-container {
-    padding: 10px;
-    margin-top: 10px;
+    display: block;
+    padding: 16px;
+    margin-top: 8px;
+}
+
+.item-icon {
+    width: 64px;
+    height: 64px;
+    margin-right: 4px;
+}
+
+.small-item-icon {
+    width: 32px;
+    height: 32px;
+    margin-right: 4px;
 }
 
 
-    

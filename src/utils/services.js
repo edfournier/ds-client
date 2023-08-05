@@ -1,4 +1,7 @@
-export async function get(path) {
+/*
+ * Fetch wrapper for making authorized request to the Bungie.net API. 
+ */
+export async function getWithAuth(path) {
     const token = sessionStorage.getItem("token");
     const response = await fetch("https://www.bungie.net/Platform/Destiny2" + path, {
         headers: {
