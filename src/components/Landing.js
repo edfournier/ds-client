@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
-import { getWithAuth } from "../utils/services";
+import { fetchWithAuth } from "../utils/services";
 import { Database } from "../utils/Database";
 import { getVendorName } from "../utils/vendors";
 import { useAuth } from "../auth/AuthProvider";
 import { Search } from "./Search";
 import { Inventory } from "./Inventory";
 import { Logout } from "./Logout";
+import { Notify } from "./Notify";
 
+
+// MAKE A TRANSLATE FUNCTION, THAT GOES FROM ITEM HASHES TO ITEM DEFINITIONS?
 
 async function getVendorInventories(user, itemDefinitions) {
     // Xûr, Banshee-44, Ada-1.
@@ -16,7 +19,7 @@ async function getVendorInventories(user, itemDefinitions) {
             label: getVendorName(vendorHash), 
             items: [] 
         };
-        const json = await getWithAuth(`/${user.membershipType}/Profile/${user.membershipId}/Character/${user.characterId}/Vendors/${vendorHash}/?components=402`);
+        const json = await fetchWithAuth(`https://www.bungie.net/Platform/Destiny2/${user.membershipType}/Profile/${user.membershipId}/Character/${user.characterId}/Vendors/${vendorHash}/?components=402`);
         if (!json.Response) {
             return inventory;
         }
@@ -29,13 +32,16 @@ async function getVendorInventories(user, itemDefinitions) {
 }
 
 async function getTrackedItems(user, itemDefinitions) {
-    return { label: "Tracked", items: [] };
+    const items = await fetch(`http://localhost:3001/users/${user.membershipId}`).then(response => response.json());
+    const defs = items.trackedItems.map(item => itemDefinitions[item]);
+    return { label: "Tracked Items", items: defs };
 }
 
 export function Landing() {
     const auth = useAuth();
     const [itemDefinitions, setItemDefinitions] = useState(null);
-    const [inventories, setInventories] = useState(null);
+    const [inventories, setInventories] = useState(null);           // Move inventories to child. 
+    const [flag, setFlag] = useState(false);
 
     useEffect(() => {
         async function load() {
@@ -46,25 +52,35 @@ export function Landing() {
                 getTrackedItems(auth.user, itemDefinitions),
             ]);
 
+            console.log(inventories);
+
             setItemDefinitions(itemDefinitions);
             setInventories(inventories.flat());
         }
         load();
-    }, [auth]);
+    }, [auth, flag]);   
 
     if (!inventories) {
         return <p>Loading...</p>
     }
 
+    // Add navbar to contain logout and notification signup. 
+    // Add footer (across all pages) to contain GitHub/credits.
     return (
-        <div className="home-view">
-            <div>
-                <Logout />
+        <>
+            <div className="nav">
+                <div>Hello {auth.user.name}!</div>
+                <div>
+                    <Notify />
+                    <Logout />
+                </div>
             </div>
-            <div className="inventories">
-                {inventories.map(inventory => <Inventory key={inventory.label} inventory={inventory} />)}
+            <div className="home-view">
+                <div className="inventories">
+                    {inventories.map(inventory => <Inventory key={inventory.label} inventory={inventory} />)}
+                </div>
+                <Search itemDefinitions={itemDefinitions} setFlag={setFlag} flag={flag} />
             </div>
-            <Search itemDefinitions={itemDefinitions}/>
-        </div>
+        </>
     );
 }

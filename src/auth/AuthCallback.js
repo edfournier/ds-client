@@ -1,7 +1,7 @@
 import { useAuth } from "./AuthProvider";
 import { Navigate } from "react-router";
 import { useEffect, useState } from "react";
-import { getWithAuth } from "../utils/services";
+import { fetchWithAuth } from "../utils/services";
 
 /*
  * Redirected to from Bungie's auth portal. 
@@ -27,17 +27,19 @@ export function AuthCallback() {
                     sessionStorage.setItem("token", json.access_token);
                 
                     // Get Destiny profiles linked to Bungie ID. 
-                    const profiles = await getWithAuth(`/254/Profile/${json.membership_id}/LinkedProfiles/`);
-                    const { membershipId, membershipType } = profiles.Response.profiles[0];
+                    const profiles = await fetchWithAuth(`https://www.bungie.net/Platform/Destiny2/254/Profile/${json.membership_id}/LinkedProfiles/`);
+                    console.log(profiles.Response);
+                    const { bungieGlobalDisplayName, membershipId, membershipType } = profiles.Response.profiles[0];
                 
                     // Get character ID.
-                    const profile = await getWithAuth(`/${membershipType}/Profile/${membershipId}/?components=200`);
+                    const profile = await fetchWithAuth(`https://www.bungie.net/Platform/Destiny2/${membershipType}/Profile/${membershipId}/?components=200`);
                     const characterId = Object.keys(profile.Response.characters.data)[0]; 
                 
                     // Cache user, reset auth.user (from null), and remove auth code from URL.  
-                    sessionStorage.setItem("user", JSON.stringify({ membershipId, membershipType, characterId }));
+                    sessionStorage.setItem("user", JSON.stringify({ membershipId, membershipType, characterId, name: bungieGlobalDisplayName }));
+
+                    console.log();
                     auth.setUser(JSON.parse(sessionStorage.getItem("user")));
-                    window.history.replaceState(null, "", window.location.pathname);
                 }
                 setLoading(false);
             }

@@ -1,4 +1,4 @@
-import { getWithAuth } from "./services";
+import { fetchWithKey } from "./services";
 
 export class Database {
     constructor() {
@@ -18,7 +18,7 @@ export class Database {
                 this.db = dbRequest.result;
 
                 const localPath = sessionStorage.getItem("item-definition-path");
-                const manifest = await getWithAuth("/Manifest/");
+                const manifest = await fetchWithKey("https://www.bungie.net/Platform/Destiny2/Manifest/");
                 const newestPath = manifest.Response.jsonWorldComponentContentPaths.en.DestinyInventoryItemDefinition;
 
                 // Check db is present and up to date. 

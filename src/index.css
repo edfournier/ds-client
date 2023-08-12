@@ -2,8 +2,8 @@ body {
     background-color: #121212;
     font-family: "Lexend Deca";
     color: white;
+    margin: 0px;
 }
-
 
 h1 {
     margin-bottom: 10px;
@@ -27,6 +27,17 @@ button {
     gap: 10px;
 }
 
+.login-button {
+    border-radius: 5px;
+    margin: 0;
+    border: 0;
+    padding: 10px;
+}
+
+.login-button:hover {
+    cursor: pointer;
+}
+
 /* Login page styles. */
 .login-container {
     display: flex;
@@ -37,18 +48,6 @@ button {
     margin-top: 20px;
     width: 400px;
     height: 500px;
-}
-
-.login-button {
-    font-family: inherit;
-    border-radius: 5px;
-    margin: 0;
-    border: 0;
-    padding: 10px;
-}
-
-.login-button:hover {
-    cursor: pointer;
 }
 
 .cayde {
@@ -90,6 +89,7 @@ button {
 
 /* Inventory styles. */
 .inventories {
+    margin-left: 8px;
     width: fit-content;
 }
 
@@ -105,10 +105,24 @@ button {
     margin-right: 4px;
 }
 
+.inventory-label {
+    margin: 0;
+    margin-bottom: 10px;
+}
+
 .small-item-icon {
     width: 32px;
     height: 32px;
     margin-right: 4px;
 }
 
+/* Navigation bar styles */
 
+.nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0;
+    padding: 10px;
+    background-color: #212121;
+}

@@ -10,8 +10,8 @@ export function Inventory({ inventory }) {
 
     return (
         <div className="inventory-container tile">
-            <p>{inventory.label}</p>
+            <p className="inventory-label">{inventory.label}</p>
             {images.length > 0 ? images : <i>No items!</i>}
         </div>
     );
-} 
+}

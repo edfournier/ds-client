@@ -9,6 +9,7 @@ export function AuthProvider({ children }) {
 
     function logout() {
         // Nuke caches and send to login screen.
+        setUser(null);
         sessionStorage.clear();
         return navigate("/");
     }

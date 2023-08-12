@@ -1,9 +1,11 @@
 import { useState } from "react";
+import { useAuth } from "../auth/AuthProvider";
+import { postWithAuth } from "../utils/services";
 
-// 2. MAKE SUBMIT BUTTON SEND QUERY (CORRESPONDING HASH) TO SERVER. 
 // 3. MAKE INVENTORY DISPLAY DISPLAY TRACKED ITEMS TOO IN LAND.
 
-export function Search({ itemDefinitions }) {
+export function Search({ itemDefinitions, setFlag, flag }) {
+    const auth = useAuth();
     const [query, setQuery] = useState("");
 
     const items = Object.values(itemDefinitions);
@@ -12,7 +14,7 @@ export function Search({ itemDefinitions }) {
         item => item.displayProperties.name.toLowerCase().includes(compQuery)
     );
 
-    function handleAddItem(e) {
+    async function handleAddItem(e) {
         e.preventDefault();
 
         // Check query is the name of some item (may not have auto-filled). 
@@ -21,10 +23,22 @@ export function Search({ itemDefinitions }) {
             alert(`"${query}" is an invalid search!`);
         }
         else {
-            // Send query to server here here.
-            console.log("User query:", query);
-            console.log("Item hash to send:", item.hash);
-            setQuery("");
+            try {
+                // Send query to server here here.
+                console.log("User query:", query);
+                console.log("Item hash to send:", item.hash);
+
+                await postWithAuth(`http://localhost:3001/users/${auth.user.membershipId}`, {
+                    itemHash: item.hash
+                });
+                
+                setFlag(!flag);
+                setQuery("");
+            }
+            catch (error) {
+                console.log(error);
+                alert("Failed to add item due to server issue.")
+            }
         }
     }
 
@@ -39,7 +53,7 @@ export function Search({ itemDefinitions }) {
              />
             <button onClick={handleAddItem}>Add</button>
             <div className="search-container tile">
-                {filtered.length < 15 ? filtered.map(item => <SearchResult key={item.hash} item={item} setQuery={setQuery}/>) : [] }
+                {query === "" ? [] : filtered.slice(0, 19).map(item => <SearchResult key={item.hash} item={item} setQuery={setQuery}/>)}
             </div>
         </form>
     );
