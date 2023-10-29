@@ -9,7 +9,10 @@ import { Logout } from "./Logout";
 import { Notify } from "./Notify";
 
 
-// MAKE A TRANSLATE FUNCTION, THAT GOES FROM ITEM HASHES TO ITEM DEFINITIONS?
+// 1. MAKE A TRANSLATE FUNCTION, THAT GOES FROM ITEM HASHES TO ITEM DEFINITIONS? THE TWO GET FUNCTIONS JUST GET HASHES, THEN ONE FUNCTION CONVERTS.
+// 2. Add footer (across all pages) to contain GitHub/credits.
+// 3. FIX INVENTORIES FLAG PROBLEM: ADDING NEW ITEM REFREHSES ENTIRE PAGE.
+// 4. FIX TOKEN EXPIRATION ISSUE. KICK AFTER 1 HOUR OR LEAVING PAGE.
 
 async function getVendorInventories(user, itemDefinitions) {
     // Xûr, Banshee-44, Ada-1.
@@ -40,11 +43,17 @@ async function getTrackedItems(user, itemDefinitions) {
 export function Landing() {
     const auth = useAuth();
     const [itemDefinitions, setItemDefinitions] = useState(null);
-    const [inventories, setInventories] = useState(null);           // Move inventories to child. 
+    const [inventories, setInventories] = useState(null);          
     const [flag, setFlag] = useState(false);
 
     useEffect(() => {
         async function load() {
+            // Token expires after 1 hour.
+            setTimeout(() => {
+                alert("Please reauthenticate with Bungie.net.");
+                auth.logout();
+            }, 3600000);
+
             const db = await new Database().build();
             const itemDefinitions = await db.getItems();
             const inventories = await Promise.all([
@@ -64,8 +73,6 @@ export function Landing() {
         return <p>Loading...</p>
     }
 
-    // Add navbar to contain logout and notification signup. 
-    // Add footer (across all pages) to contain GitHub/credits.
     return (
         <>
             <div className="nav">
